@@ -21,7 +21,7 @@ export default class Get extends Command {
     '> <%= config.bin %> get functions deployments account events',
   ];
 
-  private getController: GetController = new GetController();
+  private getController: GetController = new GetController({ command: this });
 
   /**
    * Runs the get command and parses the passed domains
@@ -30,6 +30,6 @@ export default class Get extends Command {
    */
   public async run(): Promise<void> {
     const domains = parseInput(Get.flags, this.argv);
-    this.getController.get({ domains });
+    await this.getController.get({ domains });
   }
 }

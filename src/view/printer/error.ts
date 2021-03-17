@@ -1,10 +1,15 @@
 import * as chalkDefault from 'chalk';
+import Command from '@oclif/command';
+import { PrettyPrintableError } from '../../shared/PrettyPrintableError';
 
 export class ErrorMessage {
   private chalk: any;
 
-  constructor(chalk: any = chalkDefault) {
+  private readonly command: Command | undefined;
+
+  constructor(command?: Command, chalk: any = chalkDefault) {
     this.chalk = chalk;
+    this.command = command;
   }
 
   /**
@@ -17,5 +22,23 @@ export class ErrorMessage {
     const errorMessage = this.chalk.red.bold(message);
     // eslint-disable-next-line no-console
     console.log(errorMessage, ...optionalParams);
+  }
+
+  public printExtended(prettyError: PrettyPrintableError) {
+    if (this.command) {
+      const {
+        message,
+        exit,
+        code,
+        ref,
+        suggestions,
+      } = prettyError.configuration;
+      this.command.error(message, {
+        exit,
+        ...(code && { code }),
+        ...(ref && { ref }),
+        ...(suggestions && { suggestions }),
+      });
+    }
   }
 }

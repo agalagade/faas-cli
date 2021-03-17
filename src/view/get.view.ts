@@ -1,12 +1,15 @@
 import * as moment from 'moment-timezone';
+import Command from '@oclif/command';
 import { LogMessage, ErrorMessage, cliUX, chalk } from './printer';
 import { ILambda } from '../types';
+import { PrettyPrintableError } from '../shared/PrettyPrintableError';
 
 require('events').EventEmitter.defaultMaxListeners = 15;
 
 const DEFAULT_FORMAT_DATETIME_WITH_SECONDS = 'DD.MM.YYYY - HH:mm:ss z';
 
 interface IDeployViewConfig {
+  command: Command;
   error?: ErrorMessage;
   log?: LogMessage;
   cliUx?: any;
@@ -26,23 +29,24 @@ export class GetView {
   private readonly cliUx: any;
 
   constructor({
+    command,
     log = new LogMessage(),
-    error = new ErrorMessage(),
+    error,
     cliUx = cliUX,
-  }: IDeployViewConfig = {}) {
+  }: IDeployViewConfig) {
     this.log = log;
-    this.error = error;
+    this.error = error || new ErrorMessage(command);
     this.cliUx = cliUx;
   }
 
   /**
    * Show an error message
-   * @param {string} error - message
+   * @param prettyError
    * @returns {void}
    * @memberof GetView
    */
-  public showErrorMessage(error: string): void {
-    return this.error.print(error);
+  public showErrorMessage(prettyError: PrettyPrintableError): void {
+    this.error.printExtended(prettyError);
   }
 
   /**
