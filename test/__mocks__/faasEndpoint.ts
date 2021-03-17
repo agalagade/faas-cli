@@ -22,6 +22,9 @@ export function getAllLambdas(url: string) {
       body: JSON.stringify(foundLambdas),
     };
   }
+  if (getUserId(url) === 'userId_1234_error') {
+    throw new Error('401 (Unauthorized)');
+  }
   const allLambdas = fileService.read(join(__dirname, 'lambdas.json'));
   foundLambdas = allLambdas.filter((e: any) => e.userId === getUserId(url));
   if (url.includes('name=')) {
@@ -157,6 +160,7 @@ export function getLimitCounts() {
     }),
   };
 }
+
 export function getLambdaCounts() {
   return {
     body: JSON.stringify({
@@ -166,6 +170,7 @@ export function getLambdaCounts() {
     }),
   };
 }
+
 export function getInvocationCounts() {
   return {
     body: JSON.stringify({

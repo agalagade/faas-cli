@@ -20,3 +20,9 @@ Feature: Get Command
     Given I have no lambdas in my account
     When I run the get command with functions/deployments/account/events parameter
     Then It should display an error
+
+  Scenario: Run the Get command for all resources for an account but the endpoint is faulty
+    Given I am authorized
+    Given I have no lambdas in my account
+    When I run the get command with functions/deployments/account/events parameter
+    Then It should display an error

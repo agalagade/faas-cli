@@ -1,3 +1,4 @@
+import Command from '@oclif/command';
 import { ErrorMessage } from '../../../src/view/printer';
 
 describe('printer - error message', () => {
@@ -9,7 +10,12 @@ describe('printer - error message', () => {
 
   it('should print a error message', () => {
     const redBoldFunction = jest.fn((message) => message);
-    const warnMessage = new ErrorMessage({ red: { bold: redBoldFunction } });
+    const command = ({
+      error: jest.fn(),
+    } as unknown) as Command;
+    const warnMessage = new ErrorMessage(command, {
+      red: { bold: redBoldFunction },
+    });
 
     warnMessage.print('Error');
 

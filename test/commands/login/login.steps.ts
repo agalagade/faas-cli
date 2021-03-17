@@ -12,6 +12,7 @@ jest.mock('../../../src/service/faasFactory.service', () =>
   jest.requireActual('../../__mocks__/faasFactory.service.ts'),
 );
 
+import Command from '@oclif/command';
 import { FileService } from '../../../src/service/file.service';
 import { LoginController } from '../../../src/controller/login.controller';
 import { LoginView } from '../../../src/view/login.view';
@@ -404,6 +405,9 @@ defineFeature(feature, (test) => {
     let userId: string;
     const accountId = '123456789';
     const loginController = new LoginController({ fileService });
+    const command = ({
+      error: jest.fn(),
+    } as unknown) as Command;
 
     given(
       'I have fetched the token and userId following the instructions',
@@ -470,7 +474,7 @@ defineFeature(feature, (test) => {
           username: '',
         });
 
-        const getController = new GetController();
+        const getController = new GetController({ command });
         await getController.get({ domains: ['functions'] });
 
         expect(JSON.stringify(stdoutSpy.mock.calls)).toContain(
